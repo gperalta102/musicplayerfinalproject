@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Music Player</string>
+    <string name="song_title_label">Song Name</string>
+    <string name="album_title_label">Album Name</string>
+    <string name="artist_title_label">Artist Name</string>
+
+    <string name="skip_foward">Skip</string>
+    <string name="skip_back">Skip Back</string>
+    <string name="play_pause">Play or Pause</string>
+</resources>
