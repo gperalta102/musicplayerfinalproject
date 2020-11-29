@@ -1,12 +1,16 @@
 package com.gperalta.android.musicplayer
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+private const val TAG = "SongFragment"
+
 
 class SongFragment: Fragment() {
     private lateinit var song: Song
@@ -36,11 +40,28 @@ class SongFragment: Fragment() {
         buttonPlayPause = view.findViewById(R.id.play_pause) as Button
 
 
+
+
         return view
     }
 
     override fun onStart() {
         super.onStart()
+        buttonPrev.setOnClickListener{
+            //previous song
+            Log.d(TAG,"prev was clicked")
+            Toast.makeText(requireActivity(), "back ",Toast.LENGTH_SHORT).show()
+        }
+        buttonPlayPause.setOnClickListener{
+            //play or pause song
+            Log.d(TAG,"play pause was clicked")
+            Toast.makeText(requireActivity(), "play/pause",Toast.LENGTH_SHORT).show()
+        }
+        buttonNext.setOnClickListener{ view: View ->
+            //next song
+            Log.d(TAG,"next was clicked")
+            Toast.makeText(requireActivity(), "Skip ",Toast.LENGTH_SHORT).show()
+        }
 
     }
 
