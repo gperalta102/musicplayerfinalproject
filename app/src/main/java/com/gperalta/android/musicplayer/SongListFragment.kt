@@ -1,5 +1,6 @@
 package com.gperalta.android.musicplayer
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,17 +14,34 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.w3c.dom.Text
+import java.util.*
 
 private const val TAG = "SongListFragment"
 
 class SongListFragment: Fragment() {
-    
+    /*Required interface for hosting activited*/
+    interface Callbacks{
+        fun onSongSelected(songId: UUID)
+    }
+
+    private var callbacks: Callbacks? = null
+
 
     private lateinit var songRecyclerView: RecyclerView
     private var adapter: SongAdapter? = null
 
     private val songListViewModel: SongListViewModel by lazy {
         ViewModelProviders.of(this).get(SongListViewModel::class.java)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +92,8 @@ class SongListFragment: Fragment() {
         }
 
         override fun onClick(v: View) {
-            Toast.makeText(context, "${song.title} pressed!",Toast.LENGTH_SHORT).show()
+            /*Toast.makeText(context, "${song.title} pressed!",Toast.LENGTH_SHORT).show()*/
+            callbacks?.onSongSelected(song.id)
         }
 
     }

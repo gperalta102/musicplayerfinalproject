@@ -9,7 +9,10 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import java.util.*
+
 private const val TAG = "SongFragment"
+private const val ARG_SONG_ID = "song_id"
 
 
 class SongFragment: Fragment() {
@@ -23,6 +26,9 @@ class SongFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         song = Song()
+        val songId:UUID = arguments?.getSerializable(ARG_SONG_ID) as UUID
+        Log.d(TAG, "args bundle song ID: $songId")
+        //eventually load song infromation
     }
 
     override fun onCreateView(
@@ -63,6 +69,17 @@ class SongFragment: Fragment() {
             Toast.makeText(requireActivity(), "Skip ",Toast.LENGTH_SHORT).show()
         }
 
+    }
+
+    companion object{
+        fun newInstance(songId: UUID):SongFragment {
+            val args = Bundle().apply {
+                putSerializable(ARG_SONG_ID, songId)
+            }
+            return SongFragment().apply {
+                arguments = args
+            }
+        }
     }
 
 
