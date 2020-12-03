@@ -11,6 +11,23 @@
         android:layout_height="360dp"
         android:orientation="horizontal"
         android:id="@+id/visualizer">
+
+        <com.cleveroad.audiovisualization.GLAudioVisualizationView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/visualizer_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:av_bubblesSize="25dp"
+            app:av_bubblesRandomizeSizes="true"
+            app:av_wavesHeight="60dp"
+            app:av_wavesFooterHeight="170dp"
+            app:av_wavesCount="7"
+            app:av_layersCount="4"
+            app:av_backgroundColor="@color/av_color_bg"
+            app:av_bubblesPerLayer="16"
+
+            />
     </LinearLayout>
 
     <LinearLayout
