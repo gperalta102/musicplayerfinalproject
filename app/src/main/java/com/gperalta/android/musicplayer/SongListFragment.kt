@@ -1,6 +1,7 @@
 package com.gperalta.android.musicplayer
 
 import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
@@ -11,21 +12,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import org.w3c.dom.Text
-import java.util.*
 
 private const val TAG = "SongListFragment"
 
 class SongListFragment: Fragment() {
     /*Required interface for hosting activited*/
     interface Callbacks{
-        fun onSongSelected(songId: Long)
+        fun onSongSelected(songId: Long, songTitle: String, artistTitle: String, location: String)
     }
 
     private var callbacks: Callbacks? = null
@@ -33,7 +30,7 @@ class SongListFragment: Fragment() {
 
     private lateinit var songRecyclerView: RecyclerView
     private var adapter: SongAdapter? = null
-    private val songs = mutableListOf<Song>()
+    private var songs = mutableListOf<Song>()
 
 
     private val songListViewModel: SongListViewModel by lazy {
@@ -76,6 +73,7 @@ class SongListFragment: Fragment() {
     }
 
     private fun updateUI(context: Context){
+        songs = mutableListOf<Song>()
 
 
         val musicResolver: ContentResolver = context.contentResolver
@@ -91,7 +89,9 @@ class SongListFragment: Fragment() {
                 val id: Long = musicCursor.getLong(idColumn)
                 val title: String = musicCursor.getString(titleColumn)
                 val artist: String = musicCursor.getString(artistColumn)
-                val tempSong: Song = Song(id,title,artist)
+                val location: String =
+                    ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,id).toString()
+                val tempSong: Song = Song(id,title,artist,location)
                 songs.add(tempSong)
             }while ( musicCursor.moveToNext())
 
@@ -121,7 +121,7 @@ class SongListFragment: Fragment() {
 
         override fun onClick(v: View) {
             /*Toast.makeText(context, "${song.title} pressed!",Toast.LENGTH_SHORT).show()*/
-            callbacks?.onSongSelected(song.id)
+            callbacks?.onSongSelected(song.id,song.title,song.artist,song.location)
         }
 
     }
