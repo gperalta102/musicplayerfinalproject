@@ -13,9 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.cleveroad.audiovisualization.AudioVisualization
-import com.cleveroad.audiovisualization.DbmHandler
-import com.cleveroad.audiovisualization.VisualizerDbmHandler
+
 
 private const val TAG = "SongFragment"
 private const val ARG_SONG_ID = "song_id"
@@ -32,12 +30,12 @@ class SongFragment: Fragment() {
     private lateinit var buttonPrev: Button
     private lateinit var buttonPlayPause: Button
     private lateinit var mediaPlayer: MediaPlayer
-    private lateinit var mVisual: com.cleveroad.audiovisualization.GLAudioVisualizationView
+    private lateinit var mVisual: com.gauravk.audiovisualizer.visualizer.CircleLineVisualizer
     private var songId: Long = 0
     private var songTitle = "broken"
     private var songArtist = "broken too"
     private var songLocation = "even this one is broken"
-    private lateinit var audioVisualization: AudioVisualization
+
 
 
 
@@ -55,7 +53,6 @@ class SongFragment: Fragment() {
         //eventually load song infromation into media player
         val songUri: Uri = Uri.parse(songLocation)
         mediaPlayer = MediaPlayer.create(context,songUri)
-
 
 
 
@@ -81,11 +78,14 @@ class SongFragment: Fragment() {
         buttonPrev = view.findViewById(R.id.skip_back) as Button
         buttonNext = view.findViewById(R.id.skip_foward) as Button
         buttonPlayPause = view.findViewById(R.id.play_pause) as Button
-        mVisual = view.findViewById(R.id.visualizer_view)
+        mVisual = view.findViewById(R.id.circle)
+        val audioSessionId: Int = mediaPlayer.audioSessionId
+        if (audioSessionId != -1){
+            mVisual.setAudioSessionId(audioSessionId)
+        }
 
-        audioVisualization = mVisual as AudioVisualization
-        val vDbmHandler: VisualizerDbmHandler = DbmHandler.Factory.newVisualizerHandler(requireContext(),0)
-        audioVisualization.linkTo(vDbmHandler)
+
+
 
 
 
@@ -110,10 +110,10 @@ class SongFragment: Fragment() {
             Toast.makeText(requireActivity(), "play/pause",Toast.LENGTH_SHORT).show()
             if (mediaPlayer.isPlaying){
                 mediaPlayer.pause()
-                audioVisualization.onPause()
+
             }else{
                 mediaPlayer.start()
-                audioVisualization.onResume()
+
             }
         }
         buttonNext.setOnClickListener{ view: View ->
@@ -130,8 +130,10 @@ class SongFragment: Fragment() {
     }
 
     override fun onDestroy() {
-        audioVisualization.release()
         super.onDestroy()
+        if (mVisual!= null){
+            mVisual.release()
+        }
 
 
     }
