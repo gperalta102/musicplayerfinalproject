@@ -1,6 +1,7 @@
 package com.gperalta.android.musicplayer
 
 import android.media.MediaPlayer
+import android.media.audiofx.Visualizer
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 
 private const val TAG = "SongFragment"
@@ -31,6 +33,8 @@ class SongFragment: Fragment() {
     private var songTitle = "broken"
     private var songArtist = "broken too"
     private var songLocation = "even this one is broken"
+
+
 
 
 
@@ -114,6 +118,8 @@ class SongFragment: Fragment() {
             }
         }
     }
+
+    
 
 
 

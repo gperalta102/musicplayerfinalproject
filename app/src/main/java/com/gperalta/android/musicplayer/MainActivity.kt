@@ -1,6 +1,7 @@
 package com.gperalta.android.musicplayer
 
 import android.content.pm.PackageManager
+import android.media.audiofx.Visualizer
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +12,8 @@ import androidx.core.content.ContextCompat
 import java.util.*
 
 private const val TAG = "MainActivity"
+
+
 class MainActivity : AppCompatActivity(), SongListFragment.Callbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
