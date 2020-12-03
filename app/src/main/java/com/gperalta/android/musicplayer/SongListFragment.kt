@@ -1,7 +1,11 @@
 package com.gperalta.android.musicplayer
 
+import android.content.ContentResolver
 import android.content.Context
+import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +25,7 @@ private const val TAG = "SongListFragment"
 class SongListFragment: Fragment() {
     /*Required interface for hosting activited*/
     interface Callbacks{
-        fun onSongSelected(songId: UUID)
+        fun onSongSelected(songId: Long)
     }
 
     private var callbacks: Callbacks? = null
@@ -29,6 +33,8 @@ class SongListFragment: Fragment() {
 
     private lateinit var songRecyclerView: RecyclerView
     private var adapter: SongAdapter? = null
+    private val songs = mutableListOf<Song>()
+
 
     private val songListViewModel: SongListViewModel by lazy {
         ViewModelProviders.of(this).get(SongListViewModel::class.java)
@@ -46,7 +52,7 @@ class SongListFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "Total songsL ${songListViewModel.songs.size}")
+        Log.d(TAG, "Total songs ${songs.size}")
     }
 
     override fun onCreateView(
@@ -58,7 +64,7 @@ class SongListFragment: Fragment() {
 
         songRecyclerView = view.findViewById(R.id.song_recycler_view) as RecyclerView
         songRecyclerView.layoutManager = LinearLayoutManager(context)
-        updateUI()
+        updateUI(requireActivity())
 
         return view
     }
@@ -69,11 +75,33 @@ class SongListFragment: Fragment() {
         }
     }
 
-    private fun updateUI(){
-        val songs = songListViewModel.songs
+    private fun updateUI(context: Context){
+
+
+        val musicResolver: ContentResolver = context.contentResolver
+        val musicURI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        val musicCursor: Cursor? = musicResolver.query(musicURI,null,null,null,null)
+
+        if (musicCursor != null && musicCursor.moveToFirst()){
+            val idColumn: Int = musicCursor.getColumnIndex(MediaStore.Audio.Media._ID)
+            val titleColumn: Int = musicCursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
+            val artistColumn: Int = musicCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
+
+            do {
+                val id: Long = musicCursor.getLong(idColumn)
+                val title: String = musicCursor.getString(titleColumn)
+                val artist: String = musicCursor.getString(artistColumn)
+                val tempSong: Song = Song(id,title,artist)
+                songs.add(tempSong)
+            }while ( musicCursor.moveToNext())
+
+        }
+
         adapter = SongAdapter(songs)
         songRecyclerView.adapter = adapter
     }
+
+
 
     private inner class SongHolder(view: View):RecyclerView.ViewHolder(view), View.OnClickListener{
         private lateinit var song: Song

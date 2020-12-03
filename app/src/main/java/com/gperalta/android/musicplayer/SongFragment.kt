@@ -26,7 +26,7 @@ class SongFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         song = Song()
-        val songId:UUID = arguments?.getSerializable(ARG_SONG_ID) as UUID
+        val songId:Long = arguments?.getSerializable(ARG_SONG_ID) as Long
         Log.d(TAG, "args bundle song ID: $songId")
         //eventually load song infromation
     }
@@ -72,7 +72,7 @@ class SongFragment: Fragment() {
     }
 
     companion object{
-        fun newInstance(songId: UUID):SongFragment {
+        fun newInstance(songId: Long):SongFragment {
             val args = Bundle().apply {
                 putSerializable(ARG_SONG_ID, songId)
             }
